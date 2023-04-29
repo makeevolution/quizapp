@@ -1,7 +1,12 @@
+import SelectField from "../components/SelectField"
 
 const Settings = () => {
   return (
-    <div>Settings</div>
+    <form>
+      <SelectField label="Category">
+        
+      </SelectField>
+    </form>
   );
 }
 
