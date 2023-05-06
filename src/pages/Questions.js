@@ -79,9 +79,8 @@ const Questions = () => {
     if (e.target.textContent.trim() === response.results[questionIndex].correct_answer.trim()){
       dispatch(update({type: CHANGE_SCORE, value: {score: score + 1}}))
     }
-    console.log(questionIndex)
-    console.log(amount_of_questions)
   }
+
   return (
     <Box>
       <Typography variant="h4">
