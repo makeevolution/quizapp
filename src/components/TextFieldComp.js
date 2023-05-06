@@ -1,9 +1,17 @@
 import React from 'react'
 import { FormControl, TextField } from '@mui/material'
 import { Box } from '@mui/system'
+import { useDispatch } from "react-redux";
+import { update } from "../redux/reducer";
+import { CHANGE_AMOUNT } from '../redux/actionsTypes';
 
 const TextFieldComp = () => {
-  const handleChange = () => {};
+  const dispatch = useDispatch();
+  const handleChange = (e) => {
+    dispatch(update({type: CHANGE_AMOUNT, value: {amount_of_questions: e.target.value}}
+      )
+    )
+  };
 
   return (
     <Box mt={3} width="100%">
@@ -17,6 +25,7 @@ const TextFieldComp = () => {
                 />
         </FormControl>
     </Box>
-  )}
+  )
+}
 
 export default TextFieldComp
