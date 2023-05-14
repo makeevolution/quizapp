@@ -41,5 +41,5 @@ jobs:
             # Pull the latest image
             docker pull aldosebastian/quizapp
             # Run the quizapp service container, with name quizapp as the container
-            docker-compose up -d
-            # docker run -d --publish 3000:3000 --restart always --name quizapp aldosebastian/quizapp
+            # docker-compose up -d
+            docker run -d --publish 3500:3000 --restart always --name quizapp aldosebastian/quizapp
