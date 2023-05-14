@@ -30,6 +30,7 @@ jobs:
           username: root
           key: ${{ secrets.SSHKEY1 }}
           script: |
+            cd /home/aldo/quizapp
             # Login to dockerhub registry
             docker login -u aldosebastian -p ${{ secrets.DOCKERHUB_PASSWORD }}
             # Stop and remove any quizapp container
@@ -40,4 +41,5 @@ jobs:
             # Pull the latest image
             docker pull aldosebastian/quizapp
             # Run the quizapp service container, with name quizapp as the container
-            docker run -d --publish 3000:3000 --restart always --name quizapp aldosebastian/quizapp
+            docker-compose up -d
+            # docker run -d --publish 3000:3000 --restart always --name quizapp aldosebastian/quizapp
