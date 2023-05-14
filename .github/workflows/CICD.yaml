@@ -12,7 +12,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - name: build docker image
-        run: docker sss build -t aldosebastian/quizapp .
+        run: docker build -t aldosebastian/quizapp .
       - name: login to docker hub
         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: tag image
