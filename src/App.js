@@ -12,7 +12,7 @@ function App() {
 
   // mt is margin top (so like Bootstrap)
   return (
-    <Router basename='/quizapp'>
+    <Router basename='/'>
       <Container maxWidth="sm">
         <Box textAlign="center" mt={5}>
           <Routes>
