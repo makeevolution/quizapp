@@ -1,6 +1,5 @@
 {
   "name": "multiple-choice-quiz",
-  "proxy": "http://127.0.0.1/quizapp/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
