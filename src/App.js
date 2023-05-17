@@ -16,7 +16,7 @@ function App() {
       <Container maxWidth="sm">
         <Box textAlign="center" mt={5}>
           <Routes>
-            <Route path="/" element={<>
+            <Route path="/quizapp" element={<>
               <Typography variant="h2" fontWeight="bold">
                 Quiz app
               </Typography>
