@@ -3,6 +3,7 @@ import {
   Routes, Route
 } from "react-router-dom"
 import Settings from './pages/Settings'
+import MainQuizPage from './pages/MainQuizPage'
 import Questions from "./pages/Questions"
 import FinalScreen from "./pages/FinalScreen"
 import { Container, Typography } from "@mui/material"
@@ -18,9 +19,9 @@ function App() {
           <Routes>
             <Route path="/" element={<>
               <Typography variant="h2" fontWeight="bold">
-                Quiz app
+                Raad het ontbrekende woord
               </Typography>
-              <Settings /></>
+              <MainQuizPage /></>
             } />
             <Route path="/questions" element={<Questions />} />
             <Route path="/finalscreen" element={<FinalScreen />} />

@@ -22,4 +22,34 @@ const useAxios = ({ url }) => {
     return { response, error, loading }
 }
 
+const trackerAPIinstance = axios.create({
+    baseURL: `https://localhost:7225/`
+})
+
+
+const useTrackerAPI = (url) => {
+    const [response, setResponse] = useState(null);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(true);
+    
+    useEffect(() => {
+      trackerAPIinstance.get( url)
+        .then(response => {
+          setResponse(response.data); // Update the response state with the fetched data
+          console.log(response.data)
+          setLoading(false); // Set loading state to false since data fetching is complete
+        })
+        .catch(error => {
+          setError(error.message); // Update the error state with the error message
+          console.log(url)
+          console.log(error.message)
+          setLoading(false); // Set loading state to false in case of an error
+        });
+    }, [url]);
+  
+    return { response, error, loading };
+  };
+
+export { useTrackerAPI }
+
 export default useAxios
