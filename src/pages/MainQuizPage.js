@@ -1,15 +1,19 @@
 import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import useAxios, { useTrackerAPI } from "../hooks/useAxios";
 import { useEffect, useState, Fragment, useRef } from 'react'
+import { useNavigate } from "react-router-dom";
 
 const MainQuizPage = () => {
     let trackerAPIurl = `/api/sentence/nl/`
     const { response, error, loading } = useTrackerAPI(trackerAPIurl)
     const [questionsRaw, setQuestionsRaw] = useState(null)
-    const [questionsAsHtml, setQuestionsAsHtml] = useState(null)
+    const [questionsAsHtml, setQuestionsAsHtml] = useState([])
     const questionClozeWords = useRef({})
-    const count = useRef(0)
-    
+    const render_count = useRef(0)
+    const amountOfQuestions = useRef(0)
+    const [questionIndex, setQuestionIndex] = useState(0) // track which question we are in now
+    const navigate = useNavigate();
+
     const handleChange = (event) => {
         const inputValue = event.target.value;
         const keyOfCaller = event.target.getAttribute("data-key");
@@ -17,17 +21,17 @@ const MainQuizPage = () => {
         if (questionClozeWords.current[keyOfCaller] === inputValue) {
             event.target.style.color="green"
         }
-        else{
+        else {
             event.target.style.color="red"
         }
     }
 
-    const is_word_a_fillable = (question, word, index) => {
+    const isWordAFillable = (question, word, index) => {
         // this function checks if the word is a fillable word by checking if the word and index are in the nLclozesIndices list
         // of the question object 
         return question.nLclozesIndices.some((cloze_word_and_position) => {
             if (cloze_word_and_position.clozeWord === word && cloze_word_and_position.indexInSentence === index) {
-                // make a state for this word
+                // update the clozeWordStatus object with the key question.id + "_" + index and the value word
                 questionClozeWords.current = ({
                     ...questionClozeWords.current,
                     [question.id + "_" + index]: word
@@ -38,7 +42,7 @@ const MainQuizPage = () => {
     };
 
     const changeWordToHtml = (question, word, index) => {
-        if (is_word_a_fillable(question, word, index)) {
+        if (isWordAFillable(question, word, index)) {
             return (
                 <span key={question.id + "_" + index}>
                     <input key={question.id + "_" + index} type="text" data-key={question.id + "_" + index} onChange={handleChange} />
@@ -50,11 +54,12 @@ const MainQuizPage = () => {
 
     useEffect(() => {
         if (response?.length) {
-          setQuestionsRaw(response);
+            amountOfQuestions.current = response.length
+            setQuestionsRaw(response);
         }
       }, [response]);
-      
-      useEffect(() => {
+    
+    useEffect(() => {
         if (questionsRaw) {
           setQuestionsAsHtml(
             questionsRaw.map((question) => {
@@ -67,10 +72,48 @@ const MainQuizPage = () => {
           );
         }
       }, [questionsRaw]);
+    
+    if (loading) {
+        return (
+          <Box mt={20}>
+            <CircularProgress />
+          </Box>
+        )
+      }
+    if(error) {
+        return (
+          <Typography variant="h6" mt={20} color="red">
+            Something went wrong
+          </Typography>
+        )
+      }
+    // the return below will show the question index
+    // the question
+    const handleClickNext = () => {
+        if (questionIndex + 1 < amountOfQuestions.current) {
+            setQuestionIndex(questionIndex + 1)
+        }
+        else{
+            navigate("/")
+        }
+    }
 
+    function Question({}){
+        if (questionsAsHtml !==null) {
+            return (
+                <Typography component={'span'} variant={"body2"}>
+                    {questionsAsHtml[questionIndex]}
+            </Typography>
+            )
+        }
+    }
     return (
         <Box>
-            <Typography component={'span'} variant={"body2"}>{questionsAsHtml}</Typography>
+            <Typography variant="h4">
+                Question {questionIndex + 1} / {amountOfQuestions.current}
+            </Typography>
+            <Question />
+            <Button variant="contained" onClick={handleClickNext}> Volgende </Button>
         </Box>
     );
 }

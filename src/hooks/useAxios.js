@@ -33,7 +33,7 @@ const useTrackerAPI = (url) => {
     const [loading, setLoading] = useState(true);
     
     useEffect(() => {
-      trackerAPIinstance.get( url)
+      trackerAPIinstance.get(url)
         .then(response => {
           setResponse(response.data); // Update the response state with the fetched data
           console.log(response.data)

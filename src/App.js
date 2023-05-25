@@ -2,12 +2,12 @@ import {
   BrowserRouter as Router,
   Routes, Route
 } from "react-router-dom"
-import Settings from './pages/Settings'
 import MainQuizPage from './pages/MainQuizPage'
 import Questions from "./pages/Questions"
 import FinalScreen from "./pages/FinalScreen"
 import { Container, Typography } from "@mui/material"
 import { Box } from "@mui/system"
+import StartPage from "./pages/StartPage"
 
 function App() {
 
@@ -21,9 +21,9 @@ function App() {
               <Typography variant="h2" fontWeight="bold">
                 Raad het ontbrekende woord
               </Typography>
-              <MainQuizPage /></>
+              <StartPage /></>
             } />
-            <Route path="/questions" element={<Questions />} />
+            <Route path="/questions" element={<MainQuizPage />} />
             <Route path="/finalscreen" element={<FinalScreen />} />
           </Routes>
         </Box>
