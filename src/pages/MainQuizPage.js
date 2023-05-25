@@ -2,12 +2,15 @@ import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import useAxios, { useTrackerAPI } from "../hooks/useAxios";
 import { useEffect, useState, Fragment, useRef } from 'react'
 import { useNavigate } from "react-router-dom";
+import TranslateSharpIcon from '@mui/icons-material/TranslateSharp';
+import SpeakerNotesSharpIcon from '@mui/icons-material/SpeakerNotesSharp';
 
 const MainQuizPage = () => {
     let trackerAPIurl = `/api/sentence/nl/`
     const { response, error, loading } = useTrackerAPI(trackerAPIurl)
     const [questionsRaw, setQuestionsRaw] = useState(null)
     const [questionsAsHtml, setQuestionsAsHtml] = useState([])
+    const [questionPhrase, toggleQuestionPhrase] = useState(false)
     const questionClozeWords = useRef({})
     const render_count = useRef(0)
     const amountOfQuestions = useRef(0)
@@ -107,12 +110,31 @@ const MainQuizPage = () => {
             )
         }
     }
+
+    const Help = () => {
+        if (questionsAsHtml !== null && questionsAsHtml[questionIndex]) {
+            if (questionPhrase == false) {
+                toggleQuestionPhrase(true)
+            }
+            else{
+                toggleQuestionPhrase(false)
+            }
+        }
+    }
     return (
         <Box>
             <Typography variant="h4">
                 Question {questionIndex + 1} / {amountOfQuestions.current}
             </Typography>
             <Question />
+            <Box>
+                <TranslateSharpIcon onClick={Help}/>
+                { questionPhrase == true ? 
+                <Typography component={'span'} variant={"body2"}> {questionsRaw[questionIndex].phrase} </Typography> : <Typography/> }
+                <SpeakerNotesSharpIcon/>
+                <SpeakerNotesSharpIcon/>
+                <SpeakerNotesSharpIcon/>
+            </Box>
             <Button variant="contained" onClick={handleClickNext}> Volgende </Button>
         </Box>
     );
