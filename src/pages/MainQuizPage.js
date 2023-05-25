@@ -1,19 +1,19 @@
 import { Box, Typography, Button, CircularProgress } from "@mui/material";
 import useAxios, { useTrackerAPI } from "../hooks/useAxios";
-import { useEffect, useState, Fragment } from 'react'
+import { useEffect, useState, Fragment, useRef } from 'react'
 
 const MainQuizPage = () => {
     let trackerAPIurl = `/api/sentence/nl/`
     const { response, error, loading } = useTrackerAPI(trackerAPIurl)
     const [questionsRaw, setQuestionsRaw] = useState(null)
     const [questionsAsHtml, setQuestionsAsHtml] = useState(null)
-    const [clozeWordStatus, setClozeWordStatus] = useState({})
+    const questionClozeWords = useRef({})
 
     const handleChange = (event) => {
         const inputValue = event.target.value;
         const keyOfCaller = event.target.getAttribute("data-key");
         // check if the word in clozeWordStatus with key question.id + "_" + index is equal to the inputValue
-        if (clozeWordStatus[keyOfCaller] === inputValue) {
+        if (questionClozeWords.current[keyOfCaller] === inputValue) {
             event.target.style.color="green"
         }
         else{
@@ -27,10 +27,10 @@ const MainQuizPage = () => {
         return question.nLclozesIndices.some((cloze_word_and_position) => {
             if (cloze_word_and_position.clozeWord === word && cloze_word_and_position.indexInSentence === index) {
                 // make a state for this word
-                setClozeWordStatus(prevStates => ({
-                    ...prevStates,
+                questionClozeWords.current = ({
+                    ...questionClozeWords.current,
                     [question.id + "_" + index]: word
-                  }));
+                  });
                 return true;
             };
         });
@@ -66,7 +66,7 @@ const MainQuizPage = () => {
                 return <div>{words_as_html_elem}</div>
             }));
         }
-    }, [response, questionsRaw, clozeWordStatus]);  // This list specifies the dependencies of this hook. A dependency
+    }, [response, questionsRaw]);  // This list specifies the dependencies of this hook. A dependency
     // makes the hook called whenever the values of these dependencies change
 
     return (
