@@ -8,7 +8,8 @@ const MainQuizPage = () => {
     const [questionsRaw, setQuestionsRaw] = useState(null)
     const [questionsAsHtml, setQuestionsAsHtml] = useState(null)
     const questionClozeWords = useRef({})
-
+    const count = useRef(0)
+    
     const handleChange = (event) => {
         const inputValue = event.target.value;
         const keyOfCaller = event.target.getAttribute("data-key");
@@ -39,39 +40,37 @@ const MainQuizPage = () => {
     const changeWordToHtml = (question, word, index) => {
         if (is_word_a_fillable(question, word, index)) {
             return (
-                <span key={index}>
-                    <input type="text" data-key={question.id + "_" + index} onChange={handleChange} />
+                <span key={question.id + "_" + index}>
+                    <input key={question.id + "_" + index} type="text" data-key={question.id + "_" + index} onChange={handleChange} />
                 </span>
             );
         }
-        return <span key={index}> {word} </span>;
+        return <span key={question.id + "_" + index} > {word} </span>;
     };
 
-    // Obtain the list of options for the current option using the useEffect hook
     useEffect(() => {
         if (response?.length) {
-            setQuestionsRaw(response)
-
-            if (questionsRaw === null) {
-                // useState is async, so questionsRaw can still be null even if we have set it in the previous line.
-                // This is why we set questionsRaw as a dependency of this hook. This hook will be called again
-                // when questionsRaw is finally set by useState.
-                return
-            }
-            setQuestionsAsHtml(questionsRaw.map((question) => {
-                const words = question.phrase.split(' ');
-                const words_as_html_elem = words.map((word, index) => {
-                    return changeWordToHtml(question, word, index);
-                });
-                return <div>{words_as_html_elem}</div>
-            }));
+          setQuestionsRaw(response);
         }
-    }, [response, questionsRaw]);  // This list specifies the dependencies of this hook. A dependency
-    // makes the hook called whenever the values of these dependencies change
+      }, [response]);
+      
+      useEffect(() => {
+        if (questionsRaw) {
+          setQuestionsAsHtml(
+            questionsRaw.map((question) => {
+              const words = question.phrase.split(" ");
+              const words_as_html_elem = words.map((word, index) => {
+                return changeWordToHtml(question, word, index);
+              });
+              return <div key={question.id}>{words_as_html_elem}</div>;
+            })
+          );
+        }
+      }, [questionsRaw]);
 
     return (
         <Box>
-            <Typography>{questionsAsHtml}</Typography>
+            <Typography component={'span'} variant={"body2"}>{questionsAsHtml}</Typography>
         </Box>
     );
 }
