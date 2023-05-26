@@ -11,6 +11,9 @@ const MainQuizPage = () => {
     const [questionsRaw, setQuestionsRaw] = useState(null)
     const [questionsAsHtml, setQuestionsAsHtml] = useState([])
     const [questionPhrase, toggleQuestionPhrase] = useState(false)
+    const [questionNote1, toggleQuestionNote1] = useState(false)
+    const [questionNote2, toggleQuestionNote2] = useState(false)
+    const [questionNote3, toggleQuestionNote3] = useState(false)
     const questionClozeWords = useRef({})
     const render_count = useRef(0)
     const amountOfQuestions = useRef(0)
@@ -121,6 +124,39 @@ const MainQuizPage = () => {
             }
         }
     }
+
+    const Note1 = () => {
+        if (questionsAsHtml !== null && questionsAsHtml[questionIndex]) {
+            if (questionNote1 == false) {
+                toggleQuestionNote1(true)
+            }
+            else {
+                toggleQuestionNote1(false)
+            }
+        }
+    }
+
+    const Note2 = () => {
+        if (questionsAsHtml !== null && questionsAsHtml[questionIndex]) {
+            if (questionNote2 == false) {
+                toggleQuestionNote2(true)
+            }
+            else {
+                toggleQuestionNote2(false)
+            }
+        }
+    }
+
+    const Note3 = () => {
+        if (questionsAsHtml !== null && questionsAsHtml[questionIndex]) {
+            if (questionNote3 == false) {
+                toggleQuestionNote3(true)
+            }
+            else {
+                toggleQuestionNote3(false)
+            }
+        }
+    }
     return (
         <Box>
             <Typography variant="h4">
@@ -130,10 +166,29 @@ const MainQuizPage = () => {
             <Box>
                 <TranslateSharpIcon onClick={Help}/>
                 { questionPhrase == true ? 
-                <Typography component={'span'} variant={"body2"}> {questionsRaw[questionIndex].phrase} </Typography> : <Typography/> }
-                <SpeakerNotesSharpIcon/>
-                <SpeakerNotesSharpIcon/>
-                <SpeakerNotesSharpIcon/>
+                 questionsRaw[questionIndex].eNtranslations.map((translation) =>
+                    {return <Box><Typography component={'span'} variant={"body2"}>{translation}</Typography></Box>}) 
+                :
+                <Typography/>
+                }
+                <SpeakerNotesSharpIcon onClick={Note1}/>
+                { questionNote1 == true ? 
+                    <Box><Typography component={'span'} variant={"body2"}>{questionsRaw[questionIndex].note1}</Typography></Box>
+                :
+                <Typography/>
+                }
+                <SpeakerNotesSharpIcon onClick={Note2}/>
+                { questionNote2 == true ? 
+                    <Box><Typography component={'span'} variant={"body2"}>{questionsRaw[questionIndex].note2}</Typography></Box>
+                :
+                <Typography/>
+                }
+                <SpeakerNotesSharpIcon onClick={Note3}/>
+                { questionNote3 == true ? 
+                    <Box><Typography component={'span'} variant={"body2"}>{questionsRaw[questionIndex].note3}</Typography></Box>
+                :
+                <Typography/>
+                }
             </Box>
             <Button variant="contained" onClick={handleClickNext}> Volgende </Button>
         </Box>
