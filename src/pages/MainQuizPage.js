@@ -25,10 +25,10 @@ const MainQuizPage = () => {
         const keyOfCaller = event.target.getAttribute("data-key");
         // check if the word in clozeWordStatus with key question.id + "_" + index is equal to the inputValue
         if (questionClozeWords.current[keyOfCaller] === inputValue) {
-            event.target.style.color="green"
+            event.target.style.color = "green"
         }
         else {
-            event.target.style.color="red"
+            event.target.style.color = "red"
         }
     }
 
@@ -41,7 +41,7 @@ const MainQuizPage = () => {
                 questionClozeWords.current = ({
                     ...questionClozeWords.current,
                     [question.id + "_" + index]: word
-                  });
+                });
                 return true;
             };
         });
@@ -63,53 +63,53 @@ const MainQuizPage = () => {
             amountOfQuestions.current = response.length
             setQuestionsRaw(response);
         }
-      }, [response]);
-    
+    }, [response]);
+
     useEffect(() => {
         if (questionsRaw) {
-          setQuestionsAsHtml(
-            questionsRaw.map((question) => {
-              const words = question.phrase.split(" ");
-              const words_as_html_elem = words.map((word, index) => {
-                return changeWordToHtml(question, word, index);
-              });
-              return <div key={question.id}>{words_as_html_elem}</div>;
-            })
-          );
+            setQuestionsAsHtml(
+                questionsRaw.map((question) => {
+                    const words = question.phrase.split(" ");
+                    const words_as_html_elem = words.map((word, index) => {
+                        return changeWordToHtml(question, word, index);
+                    });
+                    return <div key={question.id}>{words_as_html_elem}</div>;
+                })
+            );
         }
-      }, [questionsRaw]);
-    
+    }, [questionsRaw]);
+
     if (loading) {
         return (
-          <Box mt={20}>
-            <CircularProgress />
-          </Box>
+            <Box mt={20}>
+                <CircularProgress />
+            </Box>
         )
-      }
-    if(error) {
+    }
+    if (error) {
         return (
-          <Typography variant="h6" mt={20} color="red">
-            Something went wrong
-          </Typography>
+            <Typography variant="h6" mt={20} color="red">
+                Something went wrong
+            </Typography>
         )
-      }
+    }
     // the return below will show the question index
     // the question
     const handleClickNext = () => {
         if (questionIndex + 1 < amountOfQuestions.current) {
             setQuestionIndex(questionIndex + 1)
         }
-        else{
+        else {
             navigate("/")
         }
     }
 
-    function Question({}){
-        if (questionsAsHtml !==null) {
+    function Question({ }) {
+        if (questionsAsHtml !== null) {
             return (
                 <Typography component={'span'} variant={"body2"}>
                     {questionsAsHtml[questionIndex]}
-            </Typography>
+                </Typography>
             )
         }
     }
@@ -119,44 +119,37 @@ const MainQuizPage = () => {
             if (questionPhrase == false) {
                 toggleQuestionPhrase(true)
             }
-            else{
+            else {
                 toggleQuestionPhrase(false)
             }
         }
     }
 
-    const Note1 = () => {
-        if (questionsAsHtml !== null && questionsAsHtml[questionIndex]) {
-            if (questionNote1 == false) {
-                toggleQuestionNote1(true)
-            }
-            else {
-                toggleQuestionNote1(false)
-            }
+    const Note = ({ noteState, note }) => {
+        if (noteState) {
+          return (
+            <Box>
+              <Typography component={'span'} variant={"body2"}>
+                {note}
+              </Typography>
+            </Box>
+          );
+        } else {
+          return <Typography />;
         }
-    }
+      };
+      
+      const handleClickNote = (note, toggleNote) => {
+        if (note === false) {
+          toggleNote(true);
+        } else {
+          toggleNote(false);
+        }
+      };
+    const handleNote1 = () => handleClickNote(questionNote1, toggleQuestionNote1);
+    const handleNote2 = () => handleClickNote(questionNote2, toggleQuestionNote2);
+    const handleNote3 = () => handleClickNote(questionNote3, toggleQuestionNote3);
 
-    const Note2 = () => {
-        if (questionsAsHtml !== null && questionsAsHtml[questionIndex]) {
-            if (questionNote2 == false) {
-                toggleQuestionNote2(true)
-            }
-            else {
-                toggleQuestionNote2(false)
-            }
-        }
-    }
-
-    const Note3 = () => {
-        if (questionsAsHtml !== null && questionsAsHtml[questionIndex]) {
-            if (questionNote3 == false) {
-                toggleQuestionNote3(true)
-            }
-            else {
-                toggleQuestionNote3(false)
-            }
-        }
-    }
     return (
         <Box>
             <Typography variant="h4">
@@ -164,31 +157,27 @@ const MainQuizPage = () => {
             </Typography>
             <Question />
             <Box>
-                <TranslateSharpIcon onClick={Help}/>
-                { questionPhrase == true ? 
-                 questionsRaw[questionIndex].eNtranslations.map((translation) =>
-                    {return <Box><Typography component={'span'} variant={"body2"}>{translation}</Typography></Box>}) 
-                :
-                <Typography/>
-                }
-                <SpeakerNotesSharpIcon onClick={Note1}/>
-                { questionNote1 == true ? 
-                    <Box><Typography component={'span'} variant={"body2"}>{questionsRaw[questionIndex].note1}</Typography></Box>
-                :
-                <Typography/>
-                }
-                <SpeakerNotesSharpIcon onClick={Note2}/>
-                { questionNote2 == true ? 
-                    <Box><Typography component={'span'} variant={"body2"}>{questionsRaw[questionIndex].note2}</Typography></Box>
-                :
-                <Typography/>
-                }
-                <SpeakerNotesSharpIcon onClick={Note3}/>
-                { questionNote3 == true ? 
-                    <Box><Typography component={'span'} variant={"body2"}>{questionsRaw[questionIndex].note3}</Typography></Box>
-                :
-                <Typography/>
-                }
+                <TranslateSharpIcon onClick={Help} />
+                {questionPhrase ? (
+                    questionsRaw[questionIndex].eNtranslations.map((translation) => (
+                        <Box key={translation}>
+                            <Typography component={'span'} variant={"body2"}>
+                                {translation}
+                            </Typography>
+                        </Box>
+                    ))
+                ) : (
+                    <Typography />
+                )}
+
+                <SpeakerNotesSharpIcon onClick={handleNote1} />
+                <Note noteState={questionNote1} note={questionsRaw[questionIndex].note1}/>
+
+                <SpeakerNotesSharpIcon onClick={handleNote2} />
+                <Note noteState={questionNote2} note={questionsRaw[questionIndex].note2}/>
+
+                <SpeakerNotesSharpIcon onClick={handleNote3} />
+                <Note noteState={questionNote3} note={questionsRaw[questionIndex].note3}/>
             </Box>
             <Button variant="contained" onClick={handleClickNext}> Volgende </Button>
         </Box>
