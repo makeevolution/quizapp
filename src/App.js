@@ -4,7 +4,7 @@ import {
 } from "react-router-dom"
 import MainQuizPage from './pages/MainQuizPage'
 import Questions from "./pages/Questions"
-import FinalScreen from "./pages/FinalScreen"
+import EndPage from "./pages/EndPage"
 import { Container, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import StartPage from "./pages/StartPage"
@@ -24,7 +24,7 @@ function App() {
               <StartPage /></>
             } />
             <Route path="/questions" element={<MainQuizPage />} />
-            <Route path="/finalscreen" element={<FinalScreen />} />
+            <Route path="/endpage" element={<EndPage />} />
           </Routes>
         </Box>
       </Container>

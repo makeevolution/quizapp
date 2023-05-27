@@ -89,7 +89,7 @@ const MainQuizPage = () => {
     if (error) {
         return (
             <Typography variant="h6" mt={20} color="red">
-                Something went wrong
+                Something went wrong! Did you start the backend?
             </Typography>
         )
     }
@@ -100,7 +100,7 @@ const MainQuizPage = () => {
             setQuestionIndex(questionIndex + 1)
         }
         else {
-            navigate("/")
+            navigate("/endpage")
         }
     }
 
