@@ -4,6 +4,8 @@ import { useEffect, useState, Fragment, useRef } from 'react'
 import { useNavigate } from "react-router-dom";
 import TranslateSharpIcon from '@mui/icons-material/TranslateSharp';
 import SpeakerNotesSharpIcon from '@mui/icons-material/SpeakerNotesSharp';
+import AlertDialogSlide from "../components/PopUp";
+import { AnswerContext } from "../contexts/AnswerContext";
 
 const MainQuizPage = () => {
     let trackerAPIurl = `/api/sentence/nl/`
@@ -15,20 +17,26 @@ const MainQuizPage = () => {
     const [questionNote2, toggleQuestionNote2] = useState(false)
     const [questionNote3, toggleQuestionNote3] = useState(false)
     const questionClozeWords = useRef({})
-    const render_count = useRef(0)
+    const render_count = useRef(0)  // for debugging
     const amountOfQuestions = useRef(0)
     const [questionIndex, setQuestionIndex] = useState(0) // track which question we are in now
-    const navigate = useNavigate();
+    const answerIsCorrect = useRef(false)
+    const navigate = useNavigate()
 
     const handleChange = (event) => {
         const inputValue = event.target.value;
         const keyOfCaller = event.target.getAttribute("data-key");
-        // check if the word in clozeWordStatus with key question.id + "_" + index is equal to the inputValue
-        if (questionClozeWords.current[keyOfCaller] === inputValue) {
+        if (questionClozeWords.current[keyOfCaller].substring(0, inputValue.length) === inputValue) {
             event.target.style.color = "green"
         }
         else {
             event.target.style.color = "red"
+        }
+        if (questionClozeWords.current[keyOfCaller] === inputValue) {
+            answerIsCorrect.current = true
+        }
+        else {
+            answerIsCorrect.current = false
         }
     }
 
@@ -93,16 +101,6 @@ const MainQuizPage = () => {
             </Typography>
         )
     }
-    // the return below will show the question index
-    // the question
-    const handleClickNext = () => {
-        if (questionIndex + 1 < amountOfQuestions.current) {
-            setQuestionIndex(questionIndex + 1)
-        }
-        else {
-            navigate("/endpage")
-        }
-    }
 
     function Question({ }) {
         if (questionsAsHtml !== null) {
@@ -150,10 +148,27 @@ const MainQuizPage = () => {
     const handleNote2 = () => handleClickNote(questionNote2, toggleQuestionNote2);
     const handleNote3 = () => handleClickNote(questionNote3, toggleQuestionNote3);
 
+      const backButtonCallback = () => {
+        if (questionIndex > 0) {
+            setQuestionIndex(questionIndex - 1);
+        }
+        else {
+            navigate("/")
+        }
+    }
+
+    const forwardButtonCallback = () => {
+        if (questionIndex + 1 < amountOfQuestions.current) {
+            setQuestionIndex(questionIndex + 1)
+        }
+        else {
+            navigate("/endpage")
+        }
+    }
     return (
         <Box>
             <Typography variant="h4">
-                Question {questionIndex + 1} / {amountOfQuestions.current}
+                Vraag {questionIndex + 1} / {amountOfQuestions.current}
             </Typography>
             <Question />
             <Box>
@@ -179,7 +194,9 @@ const MainQuizPage = () => {
                 <SpeakerNotesSharpIcon onClick={handleNote3} />
                 <Note noteState={questionNote3} note={questionsRaw[questionIndex].note3}/>
             </Box>
-            <Button variant="contained" onClick={handleClickNext}> Volgende </Button>
+            <AnswerContext.Provider value={{answerIsCorrect}}>
+                <AlertDialogSlide backButtonCallback={backButtonCallback} forwardButtonCallback={forwardButtonCallback}/>
+            </AnswerContext.Provider>
         </Box>
     );
 }

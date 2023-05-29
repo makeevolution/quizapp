@@ -8,6 +8,7 @@ import EndPage from "./pages/EndPage"
 import { Container, Typography } from "@mui/material"
 import { Box } from "@mui/system"
 import StartPage from "./pages/StartPage"
+import AddNewquestions from "./pages/NewQuestionPage"
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
             } />
             <Route path="/questions" element={<MainQuizPage />} />
             <Route path="/endpage" element={<EndPage />} />
+            <Route path="/addquestion" element={<AddNewquestions />} />
           </Routes>
         </Box>
       </Container>
