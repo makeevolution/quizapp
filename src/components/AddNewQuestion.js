@@ -1,9 +1,9 @@
 import { GroupAdd } from "@mui/icons-material";
 import { Typography, Box, Grid } from "@mui/material";
 import { useForm, useController, useFieldArray } from "react-hook-form";
+import TranslationInput from "./Translation";
 
-
-export default function AddNewQuestion({ control, register, setValue }) {
+export default function AddNewQuestion({ control, register, errors }) {
 
     // Second useFieldArray instance
     const { fields: questions, replace: questionreplace, append: questionappend, remove: questionremove, update: questionupdate } = useFieldArray({
@@ -11,13 +11,7 @@ export default function AddNewQuestion({ control, register, setValue }) {
         name: 'questions',
     });
 
-    const handleRemoveTranslation = (questionIndex, translationIndex) => {
-        if (questions[questionIndex].translations.length <= 1) {
-            return
-        }
-        questions[questionIndex].translations = questions[questionIndex].translations.filter((translation, index) => index !== translationIndex)
-        questionreplace(questions);
-    }
+
 
     const handleAddTranslation = (questionIndex) => {
         // We seem to directly mutate the state here, but we are not since here questions' scope is 
@@ -50,24 +44,12 @@ export default function AddNewQuestion({ control, register, setValue }) {
                     {...register(`questions[${questionIndex}].phrase`)}
                     defaultValue={question.phrase}
                 />
+                {errors.questions ? <p>{errors.questions[questionIndex].phrase.message}</p> : null}
             </div>
         );
     };
 
-    // Custom reusable component for the translation input
-    const TranslationInput = ({ questionIndex, translationIndex, translation, register, handleRemoveTranslation }) => {
-        return (
-            <div key={`${questionIndex}_${translationIndex}`}>
-                <input
-                    {...register(`questions[${questionIndex}].translations[${translationIndex}]`)}
-                    defaultValue={translation}
-                />
-                <button type="button" onClick={() => handleRemoveTranslation(questionIndex, translationIndex)}>
-                    Remove
-                </button>
-            </div>
-        );
-    };
+    
 
     return (
         <Grid container spacing={2} marginTop={5} direction="column">
@@ -85,12 +67,13 @@ export default function AddNewQuestion({ control, register, setValue }) {
                         <Typography variant="h6">Translations</Typography>
                         {question.translations.map((translation, translationIndex) => (
                             <TranslationInput
+                                questions={questions}
                                 key={`${questionIndex}_${translationIndex}`}
                                 questionIndex={questionIndex}
                                 translationIndex={translationIndex}
                                 translation={translation}
                                 register={register}
-                                handleRemoveTranslation={handleRemoveTranslation}
+                                questionreplace={questionreplace}
                             />
                         ))}
                         <button type="button" onClick={() => handleAddTranslation(questionIndex)}>

@@ -2,9 +2,23 @@ import { useForm, useController, useFieldArray } from "react-hook-form";
 import { Typography, Box, Grid } from "@mui/material";
 import AddNewQuestion from "../components/AddNewQuestion";
 import { useRef } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const QuestionSchema = yup.object().shape({
+    questions: yup.array().of(
+        yup.object().shape({
+            phrase: yup.string().required("Phrase is required"),
+            translations: yup.array().of(
+                yup.object().shape({
+                    translation: yup.string().required("Translation is required")
+                })
+            )
+        })
+    )
+}).required();
 
 const AddNewquestions = () => {
-
     const initialValues = useRef(
         {
             questions: [{phrase: "",
@@ -14,13 +28,12 @@ const AddNewquestions = () => {
                         translations: [""]}]
         }
     )
-    const { register, control, handleSubmit, setValue } = useForm(
+    const { register, control, handleSubmit, setValue,  formState:{ errors } } = useForm(
         {
-            defaultValues:  initialValues.current
+            defaultValues:  initialValues.current,
+            resolver: yupResolver(QuestionSchema)
         }
     ); // take only register and control functions from useForm
-
-    const errors = {};
 
     const handleSave = (formValues) => {
         //        event.preventDefault();
@@ -38,7 +51,7 @@ const AddNewquestions = () => {
         <Box>
             <Typography variant="h4">Add New Question</Typography>
             <form onSubmit={handleSubmit(handleSave)}>
-                <AddNewQuestion control={control} register={register} setValue={setValue} />
+                <AddNewQuestion control={control} register={register} errors={errors}/>
                 <div style={{ marginTop: "20px" }}>
                     <button type="submit">Save</button>
                 </div>
