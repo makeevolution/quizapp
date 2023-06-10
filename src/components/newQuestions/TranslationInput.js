@@ -1,7 +1,7 @@
 
 
 // Custom reusable component for the translation input
-export default function TranslationInput ({questionreplace, questions, questionIndex, translationIndex, translation, register }) {
+export default function TranslationInput ({errors, questionreplace, questions, questionIndex, translationIndex, translation, register }) {
     const handleRemoveTranslation = (questionIndex, translationIndex) => {
         if (questions[questionIndex].translations.length <= 1) {
             return
@@ -19,6 +19,12 @@ export default function TranslationInput ({questionreplace, questions, questionI
             <button type="button" onClick={() => handleRemoveTranslation(questionIndex, translationIndex)}>
                 Remove
             </button>
+            {(errors.questions && 
+                errors.questions[questionIndex] && 
+                errors.questions[questionIndex].translations && 
+                errors.questions[questionIndex].translations[translationIndex]) ? 
+                <p>{errors.questions[questionIndex].translations[translationIndex].message}</p> : null}
+
         </div>
     );
 };

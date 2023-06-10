@@ -1,7 +1,8 @@
 import { GroupAdd } from "@mui/icons-material";
 import { Typography, Box, Grid } from "@mui/material";
 import { useForm, useController, useFieldArray } from "react-hook-form";
-import TranslationInput from "./Translation";
+import TranslationInput from "./newQuestions/TranslationInput";
+import QuestionInput from "./newQuestions/QuestionInput";
 
 export default function AddNewQuestion({ control, register, errors }) {
 
@@ -35,19 +36,6 @@ export default function AddNewQuestion({ control, register, errors }) {
         questionremove(index)
     }
 
-    // Custom reusable component for the question input
-    const QuestionInput = ({ questionIndex, question, register }) => {
-        return (
-            <div key={`question_phrase_${questionIndex}`}>
-                <Typography variant="h6">Phrase</Typography>
-                <input
-                    {...register(`questions[${questionIndex}].phrase`)}
-                    defaultValue={question.phrase}
-                />
-                {errors.questions ? <p>{errors.questions[questionIndex].phrase.message}</p> : null}
-            </div>
-        );
-    };
 
     
 
@@ -61,12 +49,13 @@ export default function AddNewQuestion({ control, register, errors }) {
                     sx={{ border: '1px solid black', borderRadius: 4, padding: 1 }}
                 >
                     <Typography variant="h6">New Question {questionIndex + 1}</Typography>
-                    <QuestionInput questionIndex={questionIndex} question={question} register={register} />
+                    <QuestionInput errors={errors} questionIndex={questionIndex} question={question} register={register} />
 
                     <Grid item xs>
                         <Typography variant="h6">Translations</Typography>
                         {question.translations.map((translation, translationIndex) => (
                             <TranslationInput
+                                errors={errors}
                                 questions={questions}
                                 key={`${questionIndex}_${translationIndex}`}
                                 questionIndex={questionIndex}

@@ -10,9 +10,7 @@ const QuestionSchema = yup.object().shape({
         yup.object().shape({
             phrase: yup.string().required("Phrase is required"),
             translations: yup.array().of(
-                yup.object().shape({
-                    translation: yup.string().required("Translation is required")
-                })
+                    yup.string().required("Translation cannot be empty")
             )
         })
     )
@@ -36,15 +34,7 @@ const AddNewquestions = () => {
     ); // take only register and control functions from useForm
 
     const handleSave = (formValues) => {
-        //        event.preventDefault();
-        //        const errors = validateData();
-        //        if (Object.keys(errors).length) {
-        //            setErrors(errors);
-        //            return;
-        //        }
-        //        setErrors({});
-        console.log("saved");
-        //onSave(formValues);  // fake save
+        console.log(JSON.stringify(formValues))
     };
 
     return (

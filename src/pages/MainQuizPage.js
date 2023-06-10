@@ -1,5 +1,5 @@
 import { Box, Typography, Button, CircularProgress } from "@mui/material";
-import useAxios, { useTrackerAPI } from "../hooks/useAxios";
+import useAxios, { useTrackerAPIget } from "../hooks/useAxios";
 import { useEffect, useState, Fragment, useRef } from 'react'
 import { useNavigate } from "react-router-dom";
 import TranslateSharpIcon from '@mui/icons-material/TranslateSharp';
@@ -9,7 +9,7 @@ import { AnswerContext } from "../contexts/AnswerContext";
 
 const MainQuizPage = () => {
     let trackerAPIurl = `/api/sentence/nl/`
-    const { response, error, loading } = useTrackerAPI(trackerAPIurl)
+    const { response, error, loading } = useTrackerAPIget(trackerAPIurl)
     const [questionsRaw, setQuestionsRaw] = useState(null)
     const [questionsAsHtml, setQuestionsAsHtml] = useState([])
     const [questionPhrase, toggleQuestionPhrase] = useState(false)
